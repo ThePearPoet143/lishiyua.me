@@ -13,7 +13,7 @@ export default function BlogIndex() {
       <ul>
         {posts.map((post) => (
           <li key={post.slug} className="mb-2">
-            <Link href={`/blog/${post.slug}`}>
+            <Link href={`/${post.slug}`}>
               {post.title}
             </Link>
           </li>
