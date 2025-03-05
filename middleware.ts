@@ -3,19 +3,34 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host')
-  const isBlogDomain = hostname?.includes('blog.')
   const path = request.nextUrl.pathname
-  
-  if (isBlogDomain) {
-    // Don't rewrite if it's already pointing to /blog
-    if (path.startsWith('/blog')) {
-      return NextResponse.next()
+  const isProd = process.env.NODE_ENV === 'production'
+
+  // If on main domain and trying to access /blog, redirect to blog subdomain
+  if (!hostname?.startsWith('blog.') && path.startsWith('/blog')) {
+    const newUrl = request.nextUrl.clone()
+    // Remove /blog prefix from path
+    newUrl.pathname = path.replace('/blog', '')
+    // Change hostname to blog subdomain
+    newUrl.host = `blog.${hostname}`
+    return NextResponse.redirect(newUrl)
+  }
+
+  // Handle blog subdomain routing
+  if (hostname?.startsWith('blog.')) {
+    // If accessing root of blog subdomain
+    if (path === '/') {
+      const newUrl = request.nextUrl.clone()
+      // Show the blog index without /blog prefix
+      return NextResponse.rewrite(new URL('/blog', request.url))
     }
-    
-    // Rewrite the URL to the blog pages
-    const url = request.nextUrl.clone()
-    url.pathname = `/blog${path}`
-    return NextResponse.rewrite(url)
+
+    // For all other blog paths, rewrite to include /blog prefix internally
+    if (!path.startsWith('/blog')) {
+      const newUrl = request.nextUrl.clone()
+      newUrl.pathname = `/blog${path}`
+      return NextResponse.rewrite(newUrl)
+    }
   }
 
   return NextResponse.next()
