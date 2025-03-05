@@ -18,11 +18,9 @@ export function middleware(request: NextRequest) {
 
   // Handle blog subdomain routing
   if (hostname?.startsWith('blog.')) {
-    // If accessing root of blog subdomain
+    // Special case: root path on blog subdomain
     if (path === '/') {
-      const newUrl = request.nextUrl.clone()
-      // Show the blog index without /blog prefix
-      return NextResponse.rewrite(new URL('/blog', request.url))
+      return NextResponse.next()
     }
 
     // For all other blog paths, rewrite to include /blog prefix internally
