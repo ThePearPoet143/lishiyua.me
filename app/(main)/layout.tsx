@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
+import { ResponsiveLayout } from "@/app/components/ResponsiveLayout";
 import localFont from "next/font/local";
-import "../globals.css";
+import "@/app/components/Header.css";
+import "@/app/globals.css";
 
+// Import local fonts
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "../fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -14,15 +18,15 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Shiyuan's Digital Garden",
-  description: "Welcome to my Digital Garden",
+  title: "Shiyuan Li",
+  description: "Personal portfolio of Shiyuan Li",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <head>
@@ -40,10 +44,10 @@ export default function RootLayout({
           sizes="<generated>"
         />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} text-white`}>
+        <ResponsiveLayout>
+          {children}
+        </ResponsiveLayout>
       </body>
     </html>
   );
