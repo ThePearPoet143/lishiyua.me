@@ -192,9 +192,9 @@ export function Header({ siteName = 'Shiyuan' }: HeaderProps) {
 
   return (
     <>
-      {/* Main Logo */}
-      <div className="logo fixed top-8 left-8">
-        <Link href="/" className="">
+      {/* Main Logo - Remove fixed class since it's handled in CSS */}
+      <div className="logo">
+        <Link href="/" className="text-white font-light uppercase text-[60px] font-geist-sans hover:opacity-80 transition-opacity">
           {siteName}
         </Link>
       </div>
